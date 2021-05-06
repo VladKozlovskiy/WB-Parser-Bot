@@ -1,35 +1,33 @@
 import requests
 from bs4 import BeautifulSoup
-from peewee import *
-
-
-
-HOST = 'https://www.wildberries.ru'
-headers = {'User-Agent': 'Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:87.0) Gecko/20100101 Firefox/87.0'}
+from config import Beginning, HOST, headers, class_of_item, class_of_title, class_of_brand, class_of_link, page
 
 
 def parser(n, criteria):
-    url = 'https://www.wildberries.ru/catalog/obuv/muzhskaya?sort=' + criteria + '&page=' + str(n)
+    """Функция, которая парсит Wildberries  страницу результатов по указанному критерию сортировки"""
+    url = Beginning + criteria + page + str(n)
+    # получаем разметку страницы
     full_page = requests.get(url, headers=headers)
     soup = BeautifulSoup(full_page.content, 'html.parser')
-    items = soup.findAll('div', class_='dtList-inner')
+    # Список в который будем отправлять полученную информвцию
+    items = soup.findAll('div', class_=class_of_item)
     res = []
     for item in items:
         res.append(
             {
-                'title': (item.find('span', class_='goods-name c-text-sm').get_text(strip=True)),
-                'brand': (item.find('strong', class_='brand-name c-text-sm').get_text(strip=True)[:-1]).upper(),
-                'link': HOST + item.find('a', class_='ref_goods_n_p j-open-full-product-card').get('href')
+                'title': (item.find('span', class_=class_of_title).get_text(strip=True)),
+                'brand': (item.find('strong', class_=class_of_brand).get_text(strip=True)[:-1]).upper(),
+                'link': HOST + item.find('a', class_=class_of_link).get('href')
             }
         )
     return res
 
 
 def pages_parser(n, criteria):
+    """Функция, которая парсит Wildberries  указанное количество страниц результатов  по указанному критерию
+    сортировки """
     res = []
     for i in range(n):
         for j in parser(n + 1, criteria):
             res.append(j)
     return res
-
-

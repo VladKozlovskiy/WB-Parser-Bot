@@ -1,5 +1,6 @@
-from peewee import *
+from peewee import CharField,DateField, SqliteDatabase,  Model
 
+# В этом файлк происходит подключение к БД и создание в них нужных для бота таблиц
 new = SqliteDatabase('Newest.db')
 popular = SqliteDatabase('Popular.db')
 sale = SqliteDatabase('Sale.db')
@@ -20,7 +21,7 @@ new.connect()
 new.create_tables([New])
 
 
-class Popular(Model):  # singular form
+class Popular(Model):
     title = CharField()
     brand = DateField()
     link = CharField()
@@ -33,7 +34,7 @@ popular.connect()
 popular.create_tables([Popular])
 
 
-class Sale(Model):  # singular form
+class Sale(Model):
     title = CharField()
     brand = DateField()
     link = CharField()
@@ -46,7 +47,7 @@ sale.connect()
 sale.create_tables([Sale])
 
 
-class Price(Model):  # singular form
+class Price(Model):
     title = CharField()
     brand = DateField()
     link = CharField()
@@ -59,7 +60,7 @@ price.connect()
 price.create_tables([Price])
 
 
-class Rate(Model):  # singular form
+class Rate(Model):
     title = CharField()
     brand = DateField()
     link = CharField()
@@ -70,8 +71,3 @@ class Rate(Model):  # singular form
 
 rate.connect()
 rate.create_tables([Rate])
-
-
-
-
-
