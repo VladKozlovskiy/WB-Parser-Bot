@@ -79,7 +79,7 @@ def search(message):
 
 
 @bot.message_handler(commands=["find_by_criteria"])
-def search_meds(message):
+def search_meds1(message):
     msg1 = bot.send_message(message.chat.id,
                             "Введите через пробел критерий, по которому должен быть отсортирован товар, а так же "
                             "бренд или наименование желаемого товара")
