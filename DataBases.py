@@ -1,4 +1,4 @@
-from peewee import CharField,DateField, SqliteDatabase,  Model
+from peewee import CharField, DateField, SqliteDatabase, Model
 
 # В этом файлк происходит подключение к БД и создание в них нужных для бота таблиц
 new = SqliteDatabase('Newest.db')

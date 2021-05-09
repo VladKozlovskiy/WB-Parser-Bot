@@ -1,4 +1,10 @@
 """Файл с константами"""
+from DataBases import New, Rate, Sale, Popular, Price
+
+User_message_dict = {"Популярность": Popular.select(), "Рейтинг": Rate.select(), "Цена": Price.select(),
+                     "Самое свежее": New.select(),
+                     "Самая большая скидка": Sale.select()}
+BD_dict = {"new": New, "popular": Popular, "rate": Rate, "priceup": Price, "sale": Sale}
 token = '1756290871:AAGj8_apOkmPvisYkES8_mhhYXr-vn3jnFA'
 Beginning = 'https://www.wildberries.ru/catalog/obuv/muzhskaya?sort='
 HOST = 'https://www.wildberries.ru'
