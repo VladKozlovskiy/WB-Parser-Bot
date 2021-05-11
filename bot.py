@@ -1,24 +1,15 @@
-import parsing
+"""Файл с запуском бота"""
 import schedule
 import telebot
 import threading
 import time
+
+import parsing
 from config import BD_dict, token, User_message_dict
 
 # Вводим токен
 
 bot = telebot.TeleBot(token)
-
-
-# Словарь для запуска программы
-
-
-def update_db(cretiria):
-    for i in BD_dict[cretiria].select():
-        i.delete_instance()
-    for i in parsing.pages_parser(1, cretiria):
-        new = BD_dict[cretiria].create(title=i["title"], brand=i["brand"], link=i["link"])
-        new.save()
 
 
 # Обработка команды хелп
@@ -33,9 +24,18 @@ def tell_instructions(message):
                      "то Вам подойдет команда /find_top .\n ")
 
 
-def update_information():
+def update_db(cretiria):
     """Функция обновления базы данных. Перед началом обновления чистим каждую БД, после заполняем и сохраняеи
-    информацию """
+        информацию """
+    for i in BD_dict[cretiria].select():
+        i.delete_instance()
+    for i in parsing.pages_parser(1, cretiria):
+        new = BD_dict[cretiria].create(title=i["title"], brand=i["brand"], link=i["link"])
+        new.save()
+
+
+def update_information():
+    """Функция обновления баз данных. """
     for i in BD_dict.keys():
         update_db(i)
 

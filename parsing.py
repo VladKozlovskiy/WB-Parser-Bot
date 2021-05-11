@@ -1,5 +1,6 @@
 import requests
 from bs4 import BeautifulSoup
+
 from config import Beginning, HOST, headers, class_of_item, class_of_title, class_of_brand, class_of_link, page
 
 
