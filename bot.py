@@ -16,28 +16,28 @@ bot = telebot.TeleBot(token)
 @bot.message_handler(commands=["help"])
 def tell_instructions(message):
     bot.send_message(message.chat.id,
-                     "\tДобрый день! Вас приветствует БотыБот!\n\tЯ умею проверять сайт Wildberries в поисках мужской "
+                     "\tДобрый день! Вас приветствует БотыБот!\n Я умею проверять сайт Wildberries в поисках мужской "
                      "обуви за вас и выдавать вам актуальные предложения отсортированные по таким критериям как: "
                      " Популярность , Самая большая скидка , Рейтинг , Цена , Самое свежее!\n\tЕсли вы хотите "
-                     "получить Топ-n товаров в выбранной вами категории, то Вам поможет команда /find_by_criteria . "
+                     "получить Топ-n товаров в выбранной вами категории, то Вам поможет команда /find_by_top . "
                      "\n\tЕсли же хотите получать все товары по указанному Вами критерию(бренд или наименование), "
-                     "то Вам подойдет команда /find_top .\n ")
+                     "то Вам подойдет команда /find_by_criteria .\n ")
 
 
 def update_db(cretiria):
     """Функция обновления базы данных. Перед началом обновления чистим каждую БД, после заполняем и сохраняеи
         информацию """
-    for i in BD_dict[cretiria].select():
-        i.delete_instance()
-    for i in parsing.pages_parser(1, cretiria):
-        new = BD_dict[cretiria].create(title=i["title"], brand=i["brand"], link=i["link"])
+    for item in BD_dict[cretiria].select():
+        item.delete_instance()
+    for item in parsing.pages_parser(1, cretiria):
+        new = BD_dict[cretiria].create(title=item["title"], brand=item["brand"], link=item["link"])
         new.save()
 
 
 def update_information():
     """Функция обновления баз данных. """
-    for i in BD_dict.keys():
-        update_db(i)
+    for item in BD_dict.keys():
+        update_db(item)
 
 
 update_information()
@@ -46,25 +46,25 @@ update_information()
 
 @bot.message_handler(commands=["find_top"])
 def search_meds(message):
-    msg = bot.send_message(message.chat.id,
-                           "Введите через пробел критерий, по которому должен быть отсортирован товар, а так же "
-                           "количество вариантов, которое хотите получить ")
-    bot.register_next_step_handler(msg, search)
+    msg_top = bot.send_message(message.chat.id,
+                               "Введите через пробел критерий, по которому должен быть отсортирован товар, а так же "
+                               "количество вариантов, которое хотите получить. Пример: Популярность 10 ")
+    bot.register_next_step_handler(msg_top, search_top)
 
 
-def search(message):
+def search_top(message):
     bot.send_message(message.chat.id, "Ваш запрос обрабатывается")
     data = message.text.split()
     count = 0
     try:
-        for i in User_message_dict[data[0]]:
+        for item in User_message_dict[data[0]]:
             try:
                 if count < int(data[1]):
                     count += 1
                     markup = telebot.types.InlineKeyboardMarkup()
-                    btn_my_site = telebot.types.InlineKeyboardButton(text="Ссылка на товар", url=i.link)
+                    btn_my_site = telebot.types.InlineKeyboardButton(text="Ссылка на товар", url=item.link)
                     markup.add(btn_my_site)
-                    bot.send_message(message.chat.id, "Наименование: " + i.title + '\n' + "Бренд: " + i.brand,
+                    bot.send_message(message.chat.id, f"Наименование: {item.title} \n Бренд: {item.brand}",
                                      reply_markup=markup)
             except Exception:
                 bot.send_message(message.chat.id, "К сожалению, Вы некорректно ввели данные:( Попробуйте еще раз")
@@ -79,24 +79,25 @@ def search(message):
 
 
 @bot.message_handler(commands=["find_by_criteria"])
-def search_meds1(message):
-    msg1 = bot.send_message(message.chat.id,
-                            "Введите через пробел критерий, по которому должен быть отсортирован товар, а так же "
-                            "бренд или наименование желаемого товара")
-    bot.register_next_step_handler(msg1, search1)
+def search_meds_criteria(message):
+    msg_creteria = bot.send_message(message.chat.id,
+                                    "Введите через пробел критерий, по которому должен быть отсортирован товар, "
+                                    "а так же "
+                                    "бренд или наименование желаемого товара. /n Пример: Цена кроссовки.")
+    bot.register_next_step_handler(msg_creteria, search_criteria)
 
 
-def search1(message):
+def search_criteria(message):
     bot.send_message(message.chat.id, "Ваш запрос обрабатывается")
     data = message.text.split()
     try:
-        for i in User_message_dict[data[0]]:
+        for item in User_message_dict[data[0]]:
             markup = telebot.types.InlineKeyboardMarkup()
-            btn_my_site = telebot.types.InlineKeyboardButton(text="Ссылка на товар", url=i.link)
+            btn_my_site = telebot.types.InlineKeyboardButton(text="Ссылка на товар", url=item.link)
             markup.add(btn_my_site)
-            if i.brand == data[1].upper() or i.title.lower() == data[1].lower():
+            if item.brand == data[1].upper() or item.title.lower() == data[1].lower():
                 try:
-                    bot.send_message(message.chat.id, "Наименование: " + i.title + '\n' + "Бренд: " + i.brand,
+                    bot.send_message(message.chat.id, f"Наименование: {item.title}  '\n' Бренд: {item.brand}",
                                      reply_markup=markup)
                 except Exception:
                     bot.send_message(message.chat.id, "К сожалению, Вы некорректно ввели данные:( Попробуйте еще раз")
@@ -117,7 +118,7 @@ def run_threaded(func):
 
 @bot.message_handler(content_types=["text"])
 def answer(message):
-    bot.send_message(message.chat.id, message.from_user.first_name + ", пожалуйста, введите команду")
+    bot.send_message(message.chat.id, f"{message.from_user.first_name}, пожалуйста, введите команду")
 
 
 # Задаем период работы функций
