@@ -18,8 +18,8 @@ def tell_instructions(message):
     bot.send_message(message.chat.id,
                      "\tДобрый день! Вас приветствует БотыБот!\n Я умею проверять сайт Wildberries в поисках мужской "
                      "обуви за вас и выдавать вам актуальные предложения отсортированные по таким критериям как: "
-                     " Популярность , Самая большая скидка , Рейтинг , Цена , Самое свежее!\n\tЕсли вы хотите "
-                     "получить Топ-n товаров в выбранной вами категории, то Вам поможет команда /find_by_top . "
+                     " Популярность , Скидка , Рейтинг , Цена , Свежее!\n\tЕсли вы хотите "
+                     "получить Топ-n товаров в выбранной вами категории, то Вам поможет команда /find_top . "
                      "\n\tЕсли же хотите получать все товары по указанному Вами критерию(бренд или наименование), "
                      "то Вам подойдет команда /find_by_criteria .\n ")
 
@@ -48,7 +48,7 @@ update_information()
 def search_meds(message):
     msg_top = bot.send_message(message.chat.id,
                                "Введите через пробел критерий, по которому должен быть отсортирован товар, а так же "
-                               "количество вариантов, которое хотите получить. Пример: Популярность 10 ")
+                               "количество вариантов, которое хотите получить. \n Пример: Популярность 10 ")
     bot.register_next_step_handler(msg_top, search_top)
 
 
@@ -64,7 +64,7 @@ def search_top(message):
                     markup = telebot.types.InlineKeyboardMarkup()
                     btn_my_site = telebot.types.InlineKeyboardButton(text="Ссылка на товар", url=item.link)
                     markup.add(btn_my_site)
-                    bot.send_message(message.chat.id, f"Наименование: {item.title} \n Бренд: {item.brand}",
+                    bot.send_message(message.chat.id, f"Наименование: {item.title}  \n Бренд: {item.brand}",
                                      reply_markup=markup)
             except Exception:
                 bot.send_message(message.chat.id, "К сожалению, Вы некорректно ввели данные:( Попробуйте еще раз")
@@ -83,7 +83,7 @@ def search_meds_criteria(message):
     msg_creteria = bot.send_message(message.chat.id,
                                     "Введите через пробел критерий, по которому должен быть отсортирован товар, "
                                     "а так же "
-                                    "бренд или наименование желаемого товара. /n Пример: Цена кроссовки.")
+                                    "бренд или наименование желаемого товара. \n Пример: Популярность кроссовки.")
     bot.register_next_step_handler(msg_creteria, search_criteria)
 
 
@@ -97,7 +97,7 @@ def search_criteria(message):
             markup.add(btn_my_site)
             if item.brand == data[1].upper() or item.title.lower() == data[1].lower():
                 try:
-                    bot.send_message(message.chat.id, f"Наименование: {item.title}  '\n' Бренд: {item.brand}",
+                    bot.send_message(message.chat.id, f"Наименование: {item.title}  \n Бренд: {item.brand}",
                                      reply_markup=markup)
                 except Exception:
                     bot.send_message(message.chat.id, "К сожалению, Вы некорректно ввели данные:( Попробуйте еще раз")
