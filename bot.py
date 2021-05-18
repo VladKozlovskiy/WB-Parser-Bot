@@ -58,17 +58,13 @@ def search_top(message):
     count = 0
     try:
         for item in User_message_dict[data[0]]:
-            try:
-                if count < int(data[1]):
-                    count += 1
-                    markup = telebot.types.InlineKeyboardMarkup()
-                    btn_my_site = telebot.types.InlineKeyboardButton(text="Ссылка на товар", url=item.link)
-                    markup.add(btn_my_site)
-                    bot.send_message(message.chat.id, f"Наименование: {item.title}  \n Бренд: {item.brand}",
-                                     reply_markup=markup)
-            except Exception:
-                bot.send_message(message.chat.id, "К сожалению, Вы некорректно ввели данные:( Попробуйте еще раз")
-                pass
+            if count < int(data[1]):
+                count += 1
+                markup = telebot.types.InlineKeyboardMarkup()
+                btn_my_site = telebot.types.InlineKeyboardButton(text="Ссылка на товар", url=item.link)
+                markup.add(btn_my_site)
+                bot.send_message(message.chat.id, f"Наименование: {item.title}  \n Бренд: {item.brand}",
+                                 reply_markup=markup)
         bot.send_message(message.chat.id, "Ваш запрос обработан.")
     except Exception:
         bot.send_message(message.chat.id, "К сожалению, Вы некорректно ввели данные:( Попробуйте еще раз")
@@ -96,12 +92,8 @@ def search_criteria(message):
             btn_my_site = telebot.types.InlineKeyboardButton(text="Ссылка на товар", url=item.link)
             markup.add(btn_my_site)
             if item.brand == data[1].upper() or item.title.lower() == data[1].lower():
-                try:
-                    bot.send_message(message.chat.id, f"Наименование: {item.title}  \n Бренд: {item.brand}",
-                                     reply_markup=markup)
-                except Exception:
-                    bot.send_message(message.chat.id, "К сожалению, Вы некорректно ввели данные:( Попробуйте еще раз")
-                    pass
+                bot.send_message(message.chat.id, f"Наименование: {item.title}  \n Бренд: {item.brand}",
+                                 reply_markup=markup)
         bot.send_message(message.chat.id,
                          "Поиск закончен. Если вы ничего не получили, то, к сожалению, такого товара нет.")
     except Exception:

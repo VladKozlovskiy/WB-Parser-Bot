@@ -5,7 +5,6 @@ User_message_dict = {"Популярность": Popular.select(), "Рейтин
                      "Свежее": New.select(),
                      "Скидка": Sale.select()}
 BD_dict = {"new": New, "popular": Popular, "rate": Rate, "priceup": Price, "sale": Sale}
-token = '1756290871:AAGj8_apOkmPvisYkES8_mhhYXr-vn3jnFA'
 Beginning = 'https://www.wildberries.ru/catalog/obuv/muzhskaya?sort='
 HOST = 'https://www.wildberries.ru'
 page = '&page='

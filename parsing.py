@@ -13,7 +13,8 @@ def check_access(url):
 
 
 def parser(n, criteria):
-    """Функция, которая парсит Wildberries  страницу результатов по указанному критерию сортировки"""
+    """Функция, которая парсит кроссовки с сайта Wildberries  страницу результатов по указанному критерию сортировки
+    кроссовок """
     url = Beginning + criteria + page + str(n)
     # получаем разметку страницы
     full_page = requests.get(url, headers=headers)
@@ -34,8 +35,8 @@ def parser(n, criteria):
 
 
 def pages_parser(n, criteria):
-    """Функция, которая парсит Wildberries  указанное количество страниц результатов  по указанному критерию
-    сортировки """
+    """Функция, которая парсит кроссовки с сайта Wildberries указанное количество страниц результатов  по указанному
+    критерию сортировки кроссовок """
     res = []
     for i in range(n):
         for j in parser(n + 1, criteria):
