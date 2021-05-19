@@ -34,11 +34,15 @@ def parser(n, criteria):
         return res
 
 
-def pages_parser(n, criteria):
-    """Функция, которая парсит кроссовки с сайта Wildberries указанное количество страниц результатов  по указанному
-    критерию сортировки кроссовок """
-    res = []
-    for i in range(n):
-        for j in parser(n + 1, criteria):
-            res.append(j)
-    return res
+def pages_parser(number_of_pages, criteria):
+    """
+    Функция, которая парсит указанное количество страниц сайта с товарами, подходящими критерию выбора пользователя
+    :param number_of_pages: количество веб-страниц, на которых содержится результат поиска по критериям
+    :param criteria: критерий поиска
+    :return: все товары со страниц
+    """
+    goods = []
+    for page_number in range(number_of_pages):
+        for product in parser(page_number + 1, criteria):
+            goods.append(product)
+    return goods
